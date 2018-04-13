@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mission to Mars Homework</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <style>
+        .border {
+            border-style: solid
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="jumbotron text-center">
+            <h1>Mission to Mars</h1>
+            <p>
+                <a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data</a>
+            </p>
+        </div>
+
+        <!-- Mars News -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="heading">Latest Mars News</h2>
+                <h4 class="heading">{{mars_data.news_title}}</h4>
+                <p>{{mars_data.news_para}}</p>
+            </div>
+        </div>
+
+        <!-- JPL image, Mars Weather, Mars Facts -->
+        <div class="row">
+            <div class="col-md-7">
+                <h2 class="heading">Featured Mars Image</h2>
+                <img class='img-fluid' src={{mars_data.jpl_url_link}}>
+            </div>
+
+            <div class="col-md-5">
+                <div class='border'>
+                    <h2 class="heading">Current Weather on Mars Tweet</h2>
+                    <p>{{mars_data.mars_tweet}}</p>
+                </div>
+                <br>
+
+                <h2 class='heading'>Mars Facts</h2>
+                <table border="1" class="dataframe">
+                    <tbody>
+                      <tr>
+                        <td>Equatorial Diameter:</td>
+                        <td>6,792 km</td>
+                      </tr>
+                      <tr>
+                        <td>Polar Diameter:</td>
+                        <td>6,752 km</td>
+                      </tr>
+                      <tr>
+                        <td>Mass:</td>
+                        <td>6.42 x 10^23 kg (10.7% Earth)</td>
+                      </tr>
+                      <tr>
+                        <td>Moons:</td>
+                        <td>2 (Phobos &amp; Deimos)</td>
+                      </tr>
+                      <tr>
+                        <td>Orbit Distance:</td>
+                        <td>227,943,824 km (1.52 AU)</td>
+                      </tr>
+                      <tr>
+                        <td>Orbit Period:</td>
+                        <td>687 days (1.9 years)</td>
+                      </tr>
+                      <tr>
+                        <td>Surface Temperature:</td>
+                        <td>-153 to 20 °C</td>
+                      </tr>
+                      <tr>
+                        <td>First Record:</td>
+                        <td>2nd millennium BC</td>
+                      </tr>
+                      <tr>
+                        <td>Recorded By:</td>
+                        <td>Egyptian astronomers</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+        <!-- Mars Hemispheres Title -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="heading text-center">Mars Hemispheres</h2>
+            </div>
+        </div>
+
+        <!-- Mars Hemispheres Images -->
+        <div class="row">
+            <div class="col-md-6">
+                <img class='img-fluid' src={{mars_data.mars_hemisphere_images[0].url}}>
+                <h3 class="heading text-center">{{mars_data.mars_hemisphere_images[0].name}}</h3>
+            </div>
+
+            <div class="col-md-6">
+                <img class='img-fluid' src={{mars_data.mars_hemisphere_images[1].url}}>
+                <h3 class="heading text-center">{{mars_data.mars_hemisphere_images[1].name}}</h3>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class='col-md-6'>
+                <img class='img-fluid' src={{mars_data.mars_hemisphere_images[2].url}}>
+                <h3 class="heading text-center">{{mars_data.mars_hemisphere_images[2].name}}</h3>
+            </div>
+
+            <div class="col-md-6">
+                <img class='img-fluid' src={{mars_data.mars_hemisphere_images[3].url}}>
+                <h3 class="heading text-center">{{mars_data.mars_hemisphere_images[3].name}}</h3>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

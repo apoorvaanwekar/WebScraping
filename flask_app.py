@@ -8,24 +8,23 @@ app = Flask(__name__)
 # Connect to mongo
 mongodb = "mongodb://localhost:27017"
 mongo_clinet = pymongo.MongoClient(mongodb)
-my_database = mongo_clinet.marsDB
+my_db = mongo_clinet.mars_db
 
 
 @app.route("/")
 def index():
-    mars_data = db.mars.find_one()
-    return render_template('index.html', mars_data=mars_data)
+    marsdata = my_db.mars.find_one()
+    return render_template('index.html', mars_data=marsdata)
 
 @app.route("/scrape")
 def scrape_data():
-    mars_data = scrape_mars.scrape()
-    db.mars.update(
+    marsdata = scrape_mars.scrape()
+    my_db.mars.update(
         {},
-        mars_data,
+        marsdata,
         upsert=True
     )
     return redirect("http://localhost:5000/", code=302)
-
-
+    
 if __name__ == "__main__":
     app.run(debug=True)

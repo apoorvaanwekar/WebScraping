@@ -58,11 +58,11 @@ jpl_beautifulsoup = bs(jpl_html, 'html.parser')
 
 jpl_links = jpl_beautifulsoup.find('div', class_="carousel_items")
 jpl_tag = jpl_links.find('a', class_='button fancybox')
-jpl_url_link = "https://www.jpl.nasa.gov" + tag.get('data-fancybox-href')
+jpl_url_link = "https://www.jpl.nasa.gov" + jpl_tag.get('data-fancybox-href')
 print(jpl_url_link)
 ```
 
-    https://www.jpl.nasa.gov/spaceimages/images/mediumsize/PIA19974_ip.jpg
+    https://www.jpl.nasa.gov/spaceimages/images/mediumsize/PIA13664_ip.jpg
 
 
 
@@ -79,7 +79,7 @@ mars_tweet_text = mars_tweet.text
 print(mars_tweet_text)
 ```
 
-     Meet Dr Sarah Milkovich (@milkysa), lead of Science Operations for Mars 2020 @NASAJPL. Milkovich was responsible for the MRO HiRISE  of the surface of Mars in 2012. New @Wikipedia page: https://en.wikipedia.org/wiki/Sarah_Milkovich … #womeninSTEMpic.twitter.com/Kqz4Bpc9e2
+    Sol 2017 (April 09, 2018), Sunny, high -6C/21F, low -75C/-103F, pressure at 7.17 hPa, daylight 05:28-17:21
 
 
 
@@ -179,10 +179,6 @@ mars_facts_df
 ```python
 #convert df to html
 mars_facts_df.to_html('mars_facts.html', index=False)
-```
-
-
-```python
 ##Mars Hemisperes
 
 # assign hemispheres url to variable
@@ -192,11 +188,28 @@ mars_hem_beautifulsoup = bs(mars_response.text, 'html.parser')
 
 # find all image lists
 image_urls_list = mars_hem_beautifulsoup.find_all('a', class_="itemLink")
+image_urls_list
+```
+
+
+
+
+    [<a class="itemLink product-item" href="/search/map/Mars/Viking/cerberus_enhanced"><img alt="Cerberus Hemisphere Enhanced thumbnail" class="thumb" src="/cache/images/dfaf3849e74bf973b59eb50dab52b583_cerberus_enhanced.tif_thumb.png"/><div class="description"><h3>Cerberus Hemisphere Enhanced</h3></div></a>,
+     <a class="itemLink product-item" href="/search/map/Mars/Viking/schiaparelli_enhanced"><img alt="Schiaparelli Hemisphere Enhanced thumbnail" class="thumb" src="/cache/images/7677c0a006b83871b5a2f66985ab5857_schiaparelli_enhanced.tif_thumb.png"/><div class="description"><h3>Schiaparelli Hemisphere Enhanced</h3></div></a>,
+     <a class="itemLink product-item" href="/search/map/Mars/Viking/syrtis_major_enhanced"><img alt="Syrtis Major Hemisphere Enhanced thumbnail" class="thumb" src="/cache/images/aae41197e40d6d4f3ea557f8cfe51d15_syrtis_major_enhanced.tif_thumb.png"/><div class="description"><h3>Syrtis Major Hemisphere Enhanced</h3></div></a>,
+     <a class="itemLink product-item" href="/search/map/Mars/Viking/valles_marineris_enhanced"><img alt="Valles Marineris Hemisphere Enhanced thumbnail" class="thumb" src="/cache/images/04085d99ec3713883a9a57f42be9c725_valles_marineris_enhanced.tif_thumb.png"/><div class="description"><h3>Valles Marineris Hemisphere Enhanced</h3></div></a>]
+
+
+
+
+```python
+
+
 # open browser
 browser1 = Browser('chrome', headless=False)
 # initialize hemisphere images
 hemisphere_images = []
-
+full_images_list = []
 # loop over all images in the list
 for image in image_urls_list:
     #extract hemisphere name 
@@ -205,25 +218,17 @@ for image in image_urls_list:
     #vist the mars page
     browser1.visit(mars_hemispheres_url)
     
-    #go to the hemisphere image page
+    # go to the hemisphere image page
     browser1.click_link_by_partial_text(hemi_name)
     
-    # extract html from the browser
-    image_html = browser1.html
-    
-    # create beautifulsoup object from the source
-    mars_tweet_beutifulsoup = bs(image_html, "html.parser")
-    
-    # find the full image from the page
-    full_image = mars_tweet_beutifulsoup.find('img', class_="wide-image")
-    
-    # get the src url
-    full_image_url = full_image['src']
+    # go to hemisphere full image
+    image_url = browser1.find_link_by_partial_href(".tif/full.jpg").first._element.get_attribute("href")
     
     # store name/url in dict
     image_dict = {}
     image_dict['name'] = hemi_name
-    image_dict['url'] = full_image_url
+    image_dict['url'] = image_url
+    
     # append dict to list
     hemisphere_images.append(image_dict)
 
@@ -234,13 +239,13 @@ hemisphere_images
 
 
     [{'name': 'Cerberus Hemisphere Enhanced',
-      'url': '/cache/images/cfa62af2557222a02478f1fcd781d445_cerberus_enhanced.tif_full.jpg'},
+      'url': 'http://astropedia.astrogeology.usgs.gov/download/Mars/Viking/cerberus_enhanced.tif/full.jpg'},
      {'name': 'Schiaparelli Hemisphere Enhanced',
-      'url': '/cache/images/3cdd1cbf5e0813bba925c9030d13b62e_schiaparelli_enhanced.tif_full.jpg'},
+      'url': 'http://astropedia.astrogeology.usgs.gov/download/Mars/Viking/schiaparelli_enhanced.tif/full.jpg'},
      {'name': 'Syrtis Major Hemisphere Enhanced',
-      'url': '/cache/images/ae209b4e408bb6c3e67b6af38168cf28_syrtis_major_enhanced.tif_full.jpg'},
+      'url': 'http://astropedia.astrogeology.usgs.gov/download/Mars/Viking/syrtis_major_enhanced.tif/full.jpg'},
      {'name': 'Valles Marineris Hemisphere Enhanced',
-      'url': '/cache/images/7cf2da4bf549ed01c17f206327be4db7_valles_marineris_enhanced.tif_full.jpg'}]
+      'url': 'http://astropedia.astrogeology.usgs.gov/download/Mars/Viking/valles_marineris_enhanced.tif/full.jpg'}]
 
 
 
@@ -251,5 +256,5 @@ hemisphere_images
 ```
 
     [NbConvertApp] Converting notebook mission_to_mars.ipynb to script
-    [NbConvertApp] Writing 3684 bytes to scrape_mars.py
+    [NbConvertApp] Writing 3493 bytes to scrape_mars.py
 

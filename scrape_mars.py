@@ -44,7 +44,7 @@ def scrape():
 
     jpl_links = jpl_beautifulsoup.find('div', class_="carousel_items")
     jpl_tag = jpl_links.find('a', class_='button fancybox')
-    jpl_url_link = "https://www.jpl.nasa.gov" + tag.get('data-fancybox-href')
+    jpl_url_link = "https://www.jpl.nasa.gov" + jpl_tag.get('data-fancybox-href')
 
     ### Store data into dict
     scraped_data_dict['jpl_url_link'] = jpl_url_link
@@ -74,7 +74,7 @@ def scrape():
     mars_facts_df.columns = ['fact_title','fact_value']
 
     #convert df to html
-    mars_facts_html = mars_facts_df.to_html('mars_facts.html', index=False)
+    mars_facts_html = mars_facts_df.to_html('mars_facts.html', index=False, header = None)
 
     ### Store data into dict
     scraped_data_dict['mars_facts'] = mars_facts_html
@@ -99,30 +99,21 @@ def scrape():
         #vist the mars page
         browser1.visit(mars_hemispheres_url)
         
-        #go to the hemisphere image page
+        # go to the hemisphere image page
         browser1.click_link_by_partial_text(hemi_name)
         
-        # extract html from the browser
-        image_html = browser1.html
-        
-        # create beautifulsoup object from the source
-        mars_tweet_beutifulsoup = bs(image_html, "html.parser")
-        
-        # find the full image from the page
-        full_image = mars_tweet_beutifulsoup.find('img', class_="wide-image")
-        
-        # get the src url
-        full_image_url = full_image['src']
+        # go to hemisphere full image
+        image_url = browser1.find_link_by_partial_href(".tif/full.jpg").first._element.get_attribute("href")
         
         # store name/url in dict
         image_dict = {}
         image_dict['name'] = hemi_name
-        image_dict['url'] = full_image_url
+        image_dict['url'] = image_url
+        
         # append dict to list
         hemisphere_images.append(image_dict)
-    
+
     ### Store data into dict
     scraped_data_dict['mars_hemisphere_images'] = hemisphere_images
 
     return scraped_data_dict
-
